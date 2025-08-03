@@ -23,7 +23,8 @@ import {
 } from '@/components/ui/card';
 import { useAuth } from './providers/auth-provider';
 import Link from 'next/link';
-import { Mail, Lock, User } from 'lucide-react';
+import { Mail, Lock, User, Loader2 } from 'lucide-react';
+import { useState } from 'react';
 
 const formSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
@@ -33,6 +34,7 @@ const formSchema = z.object({
 
 export function SignupForm() {
   const { signup } = useAuth();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -42,8 +44,10 @@ export function SignupForm() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    signup(values.name, values.email);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsSubmitting(true);
+    await signup(values.name, values.email);
+    // Don't set isSubmitting to false here, as page will redirect or show an error
   }
 
   return (
@@ -103,7 +107,8 @@ export function SignupForm() {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full" disabled={isSubmitting}>
+               {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Sign Up
             </Button>
           </form>

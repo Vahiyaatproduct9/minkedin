@@ -24,6 +24,8 @@ import {
 import { useAuth } from './providers/auth-provider';
 import Link from 'next/link';
 import { Mail, Lock } from 'lucide-react';
+import { useState } from 'react';
+import { Loader2 } from 'lucide-react';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Invalid email address.' }),
@@ -32,6 +34,7 @@ const formSchema = z.object({
 
 export function LoginForm() {
   const { login } = useAuth();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -40,8 +43,10 @@ export function LoginForm() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    login(values.email, values.password);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsSubmitting(true);
+    await login(values.email, values.password);
+    // Don't set isSubmitting to false here, as page will redirect.
   }
 
   return (
@@ -85,7 +90,8 @@ export function LoginForm() {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full" disabled={isSubmitting}>
+              {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Login
             </Button>
           </form>

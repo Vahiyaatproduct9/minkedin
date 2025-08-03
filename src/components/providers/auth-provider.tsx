@@ -28,9 +28,9 @@ import { useToast } from "@/hooks/use-toast";
 interface AuthContextType {
   user: User | null;
   loading: boolean;
-  login: (email: string, password_unused: string) => void;
+  login: (email: string, password_unused: string) => Promise<void>;
   logout: () => void;
-  signup: (name: string, email: string) => void;
+  signup: (name: string, email: string) => Promise<void>;
   createPost: (post: Omit<Post, 'id' | 'authorId' | 'authorName' | 'createdAt'>) => void;
   updateProfile: (name: string, bio: string) => void;
   userPosts: Post[];
@@ -98,7 +98,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         description: error.message,
       });
     } finally {
-      setLoading(false);
+      // setLoading(false) is not called here because onAuthStateChanged will set it.
     }
   };
 
@@ -121,8 +121,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         title: "Signup Failed",
         description: error.message,
       });
-    } finally {
-      setLoading(false);
+      setLoading(false); // only set loading to false on error
     }
   };
 
@@ -140,7 +139,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         createdAt: serverTimestamp(),
       };
       await addDoc(collection(db, 'posts'), newPost);
-      router.push('/profile');
+      router.push('/');
        toast({
         title: "Post Created",
         description: "Your new post has been published.",
