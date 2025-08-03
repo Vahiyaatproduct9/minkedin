@@ -13,7 +13,6 @@ export function Header() {
 
   const navLinks = [
     { href: '/', label: 'Home', icon: Feather },
-    { href: '/create', label: 'Create', icon: PlusCircle },
     { href: '/profile', label: 'Profile', icon: User },
   ];
 
@@ -25,15 +24,32 @@ export function Header() {
             <Feather className="text-primary" />
             <span className="text-xl font-headline font-bold">MinkedIn</span>
           </Link>
-          <nav className="flex items-center gap-4">
+          <nav className="flex items-center gap-1 sm:gap-2">
             {user ? (
               <>
+                <Button
+                  variant={pathname === '/create' ? 'secondary' : 'default'}
+                  asChild
+                  className={cn(
+                    'w-full sm:w-auto',
+                    pathname === '/create' && 'bg-primary/10 text-primary'
+                  )}
+                  size="sm"
+                >
+                  <Link href="/create">
+                    <PlusCircle className="mr-0 sm:mr-2 h-4 w-4" />
+                    <span className="hidden sm:inline">Create Post</span>
+                  </Link>
+                </Button>
                 {navLinks.map(({ href, label, icon: Icon }) => (
                   <Button
                     key={label}
                     variant={pathname === href ? 'secondary' : 'ghost'}
                     asChild
-                    className={cn('hidden md:inline-flex', pathname === href && "bg-primary/10 text-primary")}
+                    className={cn(
+                      'hidden md:inline-flex',
+                      pathname === href && 'bg-primary/10 text-primary'
+                    )}
                   >
                     <Link href={href}>
                       <Icon className="mr-2 h-4 w-4" />
@@ -41,12 +57,17 @@ export function Header() {
                     </Link>
                   </Button>
                 ))}
-                 <Button variant="ghost" size="icon" onClick={logout} aria-label="Logout">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={logout}
+                  aria-label="Logout"
+                >
                   <LogOut className="h-5 w-5" />
                 </Button>
               </>
             ) : (
-                <>
+              <>
                 {pathname !== '/login' && (
                   <Button asChild variant="ghost">
                     <Link href="/login">Login</Link>
