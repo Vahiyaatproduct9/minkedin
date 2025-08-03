@@ -41,7 +41,7 @@ export function LoginForm() {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    login(values.email);
+    login(values.email, values.password);
   }
 
   return (
