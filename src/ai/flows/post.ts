@@ -1,10 +1,12 @@
-import { generate } from '@genkit-ai/ai';
-import { defineFlow } from '@genkit-ai/flow';
-import { z } from 'zod';
-import { ai } from '../genkit';
-import { next } from '@genkit-ai/next';
 
-export const suggestTitle = defineFlow(
+'use server';
+
+import {generate} from '@genkit-ai/ai';
+import {ai} from '@/ai/genkit';
+import {z} from 'zod';
+import {next} from '@genkit-ai/next';
+
+export const suggestTitle = ai.defineFlow(
   {
     name: 'suggestTitle',
     inputSchema: z.string(),
@@ -17,9 +19,8 @@ export const suggestTitle = defineFlow(
     ],
   },
   async (content) => {
-    const llm = ai.llm('googleai/gemini-2.0-flash');
-    const response = await generate({
-      model: llm,
+    
+    const response = await ai.generate({
       prompt: `Generate a concise, compelling, and creative title for the following blog post content. The title should be no more than 70 characters. The tone should be thoughtful and introspective.
 
       Content:
@@ -31,6 +32,6 @@ export const suggestTitle = defineFlow(
       },
     });
 
-    return response.text();
+    return response.text;
   }
 );
