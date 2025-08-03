@@ -49,8 +49,8 @@ export function SignupForm() {
   return (
     <Card className="w-full max-w-sm">
       <CardHeader className="text-center">
-        <CardTitle className="text-3xl font-headline">Join ReflectZen</CardTitle>
-        <CardDescription>Create an account to start your journey of reflection.</CardDescription>
+        <CardTitle className="text-3xl font-headline">Join MinkedIn</CardTitle>
+        <CardDescription>Create an account to start your professional journey.</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>

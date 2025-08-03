@@ -23,7 +23,7 @@ export function Header() {
         <div className="flex justify-between items-center h-16">
           <Link href="/" className="flex items-center gap-2">
             <Feather className="text-primary" />
-            <span className="text-xl font-headline font-bold">ReflectZen</span>
+            <span className="text-xl font-headline font-bold">MinkedIn</span>
           </Link>
           <nav className="flex items-center gap-4">
             {user ? (

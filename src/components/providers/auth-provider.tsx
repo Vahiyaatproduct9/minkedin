@@ -110,7 +110,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         id: userCredential.user.uid,
         name,
         email,
-        bio: 'New to ReflectZen!',
+        bio: 'New to MinkedIn!',
       };
       await setDoc(doc(db, 'users', newUser.id), { name: newUser.name, email: newUser.email, bio: newUser.bio });
       setUser(newUser);

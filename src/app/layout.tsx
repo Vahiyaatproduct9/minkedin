@@ -5,8 +5,8 @@ import { Header } from '@/components/header';
 import { Toaster } from '@/components/ui/toaster';
 
 export const metadata: Metadata = {
-  title: 'ReflectZen',
-  description: 'A space for mindful reflection and creation.',
+  title: 'MinkedIn',
+  description: 'Your professional social network.',
 };
 
 export default function RootLayout({
