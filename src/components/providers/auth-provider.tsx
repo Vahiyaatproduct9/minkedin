@@ -20,6 +20,7 @@ import {
   onSnapshot,
   Timestamp,
   serverTimestamp,
+  deleteDoc,
 } from 'firebase/firestore';
 import { auth, db } from '@/lib/firebase';
 import type { User, Post } from '@/lib/types';
@@ -33,6 +34,7 @@ interface AuthContextType {
   signup: (name: string, email: string) => Promise<void>;
   createPost: (post: Omit<Post, 'id' | 'authorId' | 'authorName' | 'createdAt'>) => void;
   updateProfile: (name: string, bio: string) => void;
+  deletePost: (postId: string) => void;
   userPosts: Post[];
   allPosts: Post[];
 }
@@ -67,7 +69,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!user) {
       setUserPosts([]);
       // Optionally clear all posts or fetch public posts
-      // setAllPosts([]); 
+      setAllPosts([]); 
       return;
     };
     
@@ -81,10 +83,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       } as Post));
       setAllPosts(posts);
       setUserPosts(posts.filter(p => p.authorId === user.id));
+    }, (error) => {
+        console.error("Error fetching posts:", error);
+        toast({
+            variant: "destructive",
+            title: "Error",
+            description: "Could not fetch posts. Check Firestore rules.",
+        });
     });
 
     return () => unsubscribe();
-  }, [user]);
+  }, [user, toast]);
 
   const login = async (email: string) => {
     setLoading(true);
@@ -159,8 +168,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
      }
   };
 
+  const deletePost = async (postId: string) => {
+      try {
+        await deleteDoc(doc(db, "posts", postId));
+        toast({
+            title: "Post Deleted",
+            description: "The post has been successfully removed.",
+        });
+      } catch (error: any) {
+        toast({
+            variant: "destructive",
+            title: "Error Deleting Post",
+            description: "You do not have permission to delete this post.",
+        });
+      }
+  };
+
+
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout, signup, createPost, updateProfile, userPosts, allPosts }}>
+    <AuthContext.Provider value={{ user, loading, login, logout, signup, createPost, updateProfile, deletePost, userPosts, allPosts }}>
       {children}
     </AuthContext.Provider>
   );
